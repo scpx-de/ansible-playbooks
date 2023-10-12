@@ -2,22 +2,27 @@
 - hosts: all
   become: yes
   tasks:
-    - name: Check if /etc/ssl/ directory exists
+    - name: Ensure /etc/ssl/ directory exists
       file:
         path: /etc/ssl/
         state: directory
         mode: '0755'
-      become: yes
 
-    - name: Synchronize certificates
-      synchronize:
-        src: /etc/letsencrypt/live/global/
-        dest: /etc/ssl/
-        delete: no
-        rsync_opts:
-          - "--exclude=*"
-          - "--include=fullchain.pem"
-          - "--include=privkey.pem"
+    - name: Copy fullchain.pem to target servers
+      copy:
+        src: /etc/letsencrypt/live/global/fullchain.pem
+        dest: /etc/ssl/fullchain.pem
+        owner: root
+        group: root
+        mode: '0644'
       delegate_to: 10.1.0.102
-      become: yes
+
+    - name: Copy privkey.pem to target servers
+      copy:
+        src: /etc/letsencrypt/live/global/privkey.pem
+        dest: /etc/ssl/privkey.pem
+        owner: root
+        group: root
+        mode: '0644'
+      delegate_to: 10.1.0.102
 
