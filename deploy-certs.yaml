@@ -8,15 +8,33 @@
         state: directory
         mode: '0755'
 
-    - name: Synchronize fullchain.pem to target servers
-      synchronize:
+    - name: Fetch fullchain.pem from 10.1.0.102 to Ansible Controller
+      fetch:
         src: /etc/letsencrypt/live/global/fullchain.pem
-        dest: /etc/certs/fullchain.pem
+        dest: "/tmp/fullchain.pem"
+        flat: yes
+      run_once: true
       delegate_to: 10.1.0.102
+      when: inventory_hostname == "10.1.0.102"
 
-    - name: Synchronize privkey.pem to target servers
-      synchronize:
+    - name: Fetch privkey.pem from 10.1.0.102 to Ansible Controller
+      fetch:
         src: /etc/letsencrypt/live/global/privkey.pem
-        dest: /etc/certs/privkey.pem
+        dest: "/tmp/privkey.pem"
+        flat: yes
+      run_once: true
       delegate_to: 10.1.0.102
+      when: inventory_hostname == "10.1.0.102"
+
+    - name: Copy fullchain.pem from Ansible Controller to target servers
+      copy:
+        src: "/tmp/fullchain.pem"
+        dest: "/etc/certs/fullchain.pem"
+      when: inventory_hostname != "10.1.0.102"
+
+    - name: Copy privkey.pem from Ansible Controller to target servers
+      copy:
+        src: "/tmp/privkey.pem"
+        dest: "/etc/certs/privkey.pem"
+      when: inventory_hostname != "10.1.0.102"
 
