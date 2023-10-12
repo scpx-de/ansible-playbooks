@@ -1,5 +1,5 @@
 ---
-- name: Configure .bashrc for root user
+- name: Configure bashrc for root user
   hosts: all
   become: yes
   tasks:
