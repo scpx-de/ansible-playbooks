@@ -8,35 +8,15 @@
         state: directory
         mode: '0755'
 
-    - name: Copy fullchain.pem to target servers
-      fetch:
+    - name: Synchronize fullchain.pem to target servers
+      synchronize:
         src: /etc/letsencrypt/live/global/fullchain.pem
-        dest: "/tmp/fullchain.pem"
-        flat: yes
+        dest: /etc/certs/fullchain.pem
       delegate_to: 10.1.0.102
-      run_once: true
 
-    - name: Distribute fullchain.pem to other hosts
-      copy:
-        src: "/tmp/fullchain.pem"
-        dest: "/etc/certs/fullchain.pem"
-        owner: root
-        group: root
-        mode: '0644'
-
-    - name: Copy privkey.pem to target servers
-      fetch:
+    - name: Synchronize privkey.pem to target servers
+      synchronize:
         src: /etc/letsencrypt/live/global/privkey.pem
-        dest: "/tmp/privkey.pem"
-        flat: yes
+        dest: /etc/certs/privkey.pem
       delegate_to: 10.1.0.102
-      run_once: true
-
-    - name: Distribute privkey.pem to other hosts
-      copy:
-        src: "/tmp/privkey.pem"
-        dest: "/etc/certs/privkey.pem"
-        owner: root
-        group: root
-        mode: '0644'
 
