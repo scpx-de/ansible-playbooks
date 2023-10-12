@@ -2,29 +2,41 @@
 - hosts: all
   become: yes
   tasks:
-    - name: Ensure /etc/ssl/ directory exists
+    - name: Ensure /etc/certs/ directory exists
       file:
-        path: /etc/ssl/
+        path: /etc/certs/
         state: directory
         mode: '0755'
 
     - name: Copy fullchain.pem to target servers
-      copy:
+      fetch:
         src: /etc/letsencrypt/live/global/fullchain.pem
-        dest: /etc/ssl/fullchain.pem
+        dest: "/tmp/fullchain.pem"
+        flat: yes
+      delegate_to: 10.1.0.102
+      run_once: true
+
+    - name: Distribute fullchain.pem to other hosts
+      copy:
+        src: "/tmp/fullchain.pem"
+        dest: "/etc/certs/fullchain.pem"
         owner: root
         group: root
         mode: '0644'
-        remote_src: yes
-      delegate_to: 10.1.0.102
 
     - name: Copy privkey.pem to target servers
-      copy:
+      fetch:
         src: /etc/letsencrypt/live/global/privkey.pem
-        dest: /etc/ssl/privkey.pem
+        dest: "/tmp/privkey.pem"
+        flat: yes
+      delegate_to: 10.1.0.102
+      run_once: true
+
+    - name: Distribute privkey.pem to other hosts
+      copy:
+        src: "/tmp/privkey.pem"
+        dest: "/etc/certs/privkey.pem"
         owner: root
         group: root
         mode: '0644'
-        remote_src: yes
-      delegate_to: 10.1.0.102
 
