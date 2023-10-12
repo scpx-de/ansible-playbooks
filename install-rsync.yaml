@@ -1,0 +1,9 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Ensure rsync is installed
+      apt:
+        name: rsync
+        state: present
+
