@@ -1,0 +1,25 @@
+---
+- name: Configure .bashrc for root user
+  hosts: all
+  become: yes
+  tasks:
+    - name: Remove old .bashrc file
+      file:
+        path: /root/.bashrc
+        state: absent
+
+    - name: Create new .bashrc file
+      copy:
+        content: |
+          # ~/.bashrc: executed by bash(1) for non-login shells.
+          PS1='\[\033[1;31m\]\u\[\033[m\]@\[\033[1;31m\]\h\[\033[m\][\w]$ '
+          export LS_OPTIONS='--color=auto'
+          eval "`dircolors`"
+          alias ls='ls $LS_OPTIONS'
+          alias ll='ls $LS_OPTIONS -latr'
+          alias l='ls $LS_OPTIONS -lA'
+        dest: /root/.bashrc
+        owner: root
+        group: root
+        mode: '0644'
+
