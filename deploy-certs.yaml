@@ -24,7 +24,6 @@
         flat: yes
       run_once: true
       delegate_to: 10.1.0.102
-      when: inventory_hostname == "10.1.0.102"
 
     - name: Copy fullchain.pem from Ansible Controller to target servers
       copy:
@@ -36,5 +35,3 @@
       copy:
         src: "/ansible_data/privkey.pem"
         dest: "/etc/certs/privkey.pem"
-      when: inventory_hostname != "10.1.0.102"
-
