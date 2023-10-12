@@ -5,7 +5,7 @@
   tasks:
     - name: Copy .bashrc from GitHub
       copy:
-        remote_src: https://raw.githubusercontent.com/scpx-de/ansible-playbooks/main/bashrc
+        src: bashrc
         dest: /root/.bashrc
         owner: root
         group: root
