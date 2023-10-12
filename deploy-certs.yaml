@@ -1,37 +1,37 @@
 ---
-- hosts: all
-  become: yes
+- name: Kopiere Zertifikat und Key nach 10.1.0.105
+  hosts: 10.1.0.105
   tasks:
-    - name: Ensure /etc/certs/ directory exists
+    - name: Sicherstellen, dass das SSL Verzeichnis existiert
       file:
-        path: /etc/certs/
+        path: /opt/mailcow-dockerized/data/assets/ssl
         state: directory
         mode: '0755'
+      become: yes
 
-    - name: Fetch fullchain.pem from 10.1.0.102 to Ansible Controller
+    - name: Kopiere fullchain.pem von 10.1.0.102
       fetch:
         src: /etc/letsencrypt/live/global/fullchain.pem
-        dest: "/ansible_data/fullchain.pem"
-        flat: yes
-      run_once: true
+        dest: /tmp/
       delegate_to: 10.1.0.102
-      when: inventory_hostname == "10.1.0.102"
+      become: yes
 
-    - name: Fetch privkey.pem from 10.1.0.102 to Ansible Controller
+    - name: Kopiere privkey.pem von 10.1.0.102
       fetch:
         src: /etc/letsencrypt/live/global/privkey.pem
-        dest: "/ansible_data/privkey.pem"
-        flat: yes
-      run_once: true
+        dest: /tmp/
       delegate_to: 10.1.0.102
+      become: yes
 
-    - name: Copy fullchain.pem from Ansible Controller to target servers
+    - name: Verschiebe fullchain.pem zu 10.1.0.105
       copy:
-        src: "/ansible_data/fullchain.pem"
-        dest: "/etc/certs/fullchain.pem"
-      when: inventory_hostname != "10.1.0.102"
+        src: /tmp/fullchain.pem
+        dest: /opt/mailcow-dockerized/data/assets/ssl/cert.pem
+      become: yes
 
-    - name: Copy privkey.pem from Ansible Controller to target servers
+    - name: Verschiebe privkey.pem zu 10.1.0.105
       copy:
-        src: "/ansible_data/privkey.pem"
-        dest: "/etc/certs/privkey.pem"
+        src: /tmp/privkey.pem
+        dest: /opt/mailcow-dockerized/data/assets/ssl/key.pem
+      become: yes
+
