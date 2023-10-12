@@ -15,6 +15,7 @@
         owner: root
         group: root
         mode: '0644'
+        remote_src: yes
       delegate_to: 10.1.0.102
 
     - name: Copy privkey.pem to target servers
@@ -24,5 +25,6 @@
         owner: root
         group: root
         mode: '0644'
+        remote_src: yes
       delegate_to: 10.1.0.102
 
