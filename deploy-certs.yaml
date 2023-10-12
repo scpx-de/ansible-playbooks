@@ -9,29 +9,16 @@
         mode: '0755'
       become: yes
 
-    - name: Kopiere fullchain.pem von 10.1.0.102
-      fetch:
+    - name: Synchronisiere fullchain.pem von 10.1.0.102 zu 10.1.0.105
+      synchronize:
         src: /etc/letsencrypt/live/global/fullchain.pem
-        dest: /tmp/
-      delegate_to: 10.1.0.102
-      become: yes
-
-    - name: Kopiere privkey.pem von 10.1.0.102
-      fetch:
-        src: /etc/letsencrypt/live/global/privkey.pem
-        dest: /tmp/
-      delegate_to: 10.1.0.102
-      become: yes
-
-    - name: Verschiebe fullchain.pem zu 10.1.0.105
-      copy:
-        src: /tmp/fullchain.pem
         dest: /opt/mailcow-dockerized/data/assets/ssl/cert.pem
+      delegate_to: 10.1.0.102
       become: yes
 
-    - name: Verschiebe privkey.pem zu 10.1.0.105
-      copy:
-        src: /tmp/privkey.pem
+    - name: Synchronisiere privkey.pem von 10.1.0.102 zu 10.1.0.105
+      synchronize:
+        src: /etc/letsencrypt/live/global/privkey.pem
         dest: /opt/mailcow-dockerized/data/assets/ssl/key.pem
+      delegate_to: 10.1.0.102
       become: yes
-
