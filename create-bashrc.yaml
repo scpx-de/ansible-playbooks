@@ -6,7 +6,7 @@
     - name: Copy .bashrc from GitHub
       copy:
         src: https://raw.githubusercontent.com/scpx-de/ansible-playbooks/main/.bashrc
-	dest: /root/.bashrc
+        dest: /root/.bashrc
         owner: root
         group: root
         mode: '0644'
