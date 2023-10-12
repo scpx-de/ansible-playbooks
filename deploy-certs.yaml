@@ -11,7 +11,7 @@
     - name: Fetch fullchain.pem from 10.1.0.102 to Ansible Controller
       fetch:
         src: /etc/letsencrypt/live/global/fullchain.pem
-        dest: "/tmp/fullchain.pem"
+        dest: "/ansible_data/fullchain.pem"
         flat: yes
       run_once: true
       delegate_to: 10.1.0.102
@@ -20,7 +20,7 @@
     - name: Fetch privkey.pem from 10.1.0.102 to Ansible Controller
       fetch:
         src: /etc/letsencrypt/live/global/privkey.pem
-        dest: "/tmp/privkey.pem"
+        dest: "/ansible_data/privkey.pem"
         flat: yes
       run_once: true
       delegate_to: 10.1.0.102
@@ -28,13 +28,13 @@
 
     - name: Copy fullchain.pem from Ansible Controller to target servers
       copy:
-        src: "/tmp/fullchain.pem"
+        src: "/ansible_data/fullchain.pem"
         dest: "/etc/certs/fullchain.pem"
       when: inventory_hostname != "10.1.0.102"
 
     - name: Copy privkey.pem from Ansible Controller to target servers
       copy:
-        src: "/tmp/privkey.pem"
+        src: "/ansible_data/privkey.pem"
         dest: "/etc/certs/privkey.pem"
       when: inventory_hostname != "10.1.0.102"
 
